@@ -74,8 +74,8 @@ namespace csharp_practice
                     new Picture(2, "Dog", "Hometown")
                 };
 
-                SetLocation(pictures); /* Works as expected, however, mem location of var 'pictures'
-                and param 'pics' are different, so the pointer is copied just like in c++ */
+                SetLocation(pictures); /* Works as expected, however, mem addresses of 'pictures'
+                and 'pics' are different, so the pointer is copied just like in c++ */
                 var pic = pictures[0];
                 pic.location = "Moscow";
             }
@@ -123,7 +123,7 @@ namespace csharp_practice
                 string v_str = "Milos";
                 if (v_str.GetType() == typeof(string))
                 {
-                    // Do something with a string
+                    // Do something
                 }
                 Animal animal = new Bird("Mockingbird");
                 var animal_type = animal.GetType();
@@ -134,7 +134,7 @@ namespace csharp_practice
             // Delegates
             {
                 // Primitive event system using delegates
-                // Both UIs will refresh when the user is updated
+                // Both UIs will refresh when the delegate is called
                 User user = new User(1, "milos@example.test");
                 UserUI ui1 = new UserUI("First UI");
                 UserUI ui2 = new UserUI("Second UI");
@@ -143,7 +143,6 @@ namespace csharp_practice
                 user.email = "milooos@example.test";
                 User.updated_event?.Invoke(user.id);
                 User.updated_event = null;
-                // User.updated_event.Invoke(user.id);      No ? so this would trigger an exception
             }
 
             // Multithreading
