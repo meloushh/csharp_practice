@@ -131,18 +131,15 @@ namespace csharp_practice
                 var sound = method.Invoke(animal, []);
             }
 
-            // Delegates
+            // Delegates, events
             {
-                // Primitive event system using delegates
-                // Both UIs will refresh when the delegate is called
+                // Both UIs will refresh when the event is called
                 User user = new User(1, "milos@example.test");
                 UserUI ui1 = new UserUI("First UI");
                 UserUI ui2 = new UserUI("Second UI");
-                User.updated_event += ui1.RefreshUI;
-                User.updated_event += ui2.RefreshUI;
-                user.email = "milooos@example.test";
-                User.updated_event?.Invoke(user.id);
-                User.updated_event = null;
+                User.update_event += ui1.RefreshUI;
+                User.update_event += ui2.RefreshUI;
+                user.Email = "milooos@example.test";
             }
 
             // Multithreading
