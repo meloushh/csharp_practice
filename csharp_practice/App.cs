@@ -160,26 +160,50 @@ namespace csharp_practice
 
 
             // Multithreading
-            ThreadGenerateUsers tgu = new();
-            Thread? t = new Thread(new ThreadStart(tgu.GenerateManyManyUsers));
-            t.Start();
-
-            bool app_running = true;
-            int frames = 0;
-            // Main loop
-            while (app_running)
             {
-                if (t != null && t.IsAlive == false) 
+                ThreadGenerateUsers tgu = new();
+                Thread? t = new Thread(new ThreadStart(tgu.GenerateManyManyUsers));
+                t.Start();
+                Console.WriteLine("Thread started");
+
+                bool app_running = true;
+                int frames = 0;
+                // Main loop
+                while (app_running)
                 {
-                    t = null;
-                    var first_user = tgu.users[0];
+                    if (t != null && t.IsAlive == false)
+                    {
+                        Console.WriteLine("Thread dead");
+                        t = null;
+                        var first_user = tgu.users[0];
+                        /* Tried to clear memory here but to no avail
+                         * 
+                        tgu.users.Clear();
+                        tgu.users.Capacity = 0;
+                        tgu = null;
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers(); */
+                    }
+                    Thread.Sleep(8);
+                    frames++;
+                    if (frames == 1000)
+                    {
+                        app_running = false;
+                    }
                 }
-                Thread.Sleep(8);
-                frames++;
-                if (frames == 2000)
-                {
-                    app_running = false;
-                }
+            }
+
+
+            // Lambdas
+            {
+                Func<int, int> square = x => x * x;
+                var val = square(5);
+            }
+
+            // Extensions
+            {
+                string v_str = "Milos";
+                v_str = v_str.AddMonkeys(10);
             }
         }
 
@@ -219,6 +243,19 @@ namespace csharp_practice
         {
             //pic_id = 55;      Not allowed because of in
             pic_out = new Picture(rand.Next(55555), name, location);
+        }
+    }
+
+    static class StringExtensions
+    {
+        public static string AddMonkeys(this string str, int count)
+        {
+            string result = str;
+            for (int i = 0; i < count; i++)
+            {
+                result += '@';
+            }
+            return result;
         }
     }
 }

@@ -144,8 +144,12 @@ namespace csharp_practice
     class ThreadGenerateUsers
     {
         protected int count = 10000000;
-        public List<User> users = new List<User>();
+        public List<User> users;
 
+        public ThreadGenerateUsers()
+        {
+            users = new List<User>(count);
+        }
 
         public void GenerateManyManyUsers()
         {
