@@ -4,11 +4,13 @@ namespace csharp_practice
 {
     class App
     {
+        static Random rand = new Random();
+
         static async Task Main(string[] args)
         {
-            //Task async = AsyncStuff();
+            Task async = AsyncStuff();
             NonAsyncStuff();
-            //await async;
+            await async;
             Console.WriteLine("End of main");
         }
 
@@ -29,6 +31,7 @@ namespace csharp_practice
                 v_nullable_str = "Milos";
             }
 
+
             // Non primitives
             {
                 // Tuples
@@ -48,6 +51,7 @@ namespace csharp_practice
                 SetPictureLocation(pic, "Paris"); // Will be Paris because you're passing a pointer
                 Picture? pic_nullable = null;
             }
+
 
             // Arrays
             {
@@ -79,6 +83,7 @@ namespace csharp_practice
                 var pic = pictures[0];
                 pic.location = "Moscow";
             }
+
 
             // Maps
             {
@@ -112,6 +117,7 @@ namespace csharp_practice
                 //pics_keyed[3];
             }
 
+
             // Properties
             {
                 Bird bird = new Bird("Mockingbird");
@@ -131,6 +137,7 @@ namespace csharp_practice
                 var sound = method.Invoke(animal, []);
             }
 
+
             // Delegates, events
             {
                 // Both UIs will refresh when the event is called
@@ -140,7 +147,17 @@ namespace csharp_practice
                 User.update_event += ui1.RefreshUI;
                 User.update_event += ui2.RefreshUI;
                 user.Email = "milooos@example.test";
+                //User.updated_event = null;        Cannot be done from outside the class
             }
+
+
+            // in and out keywords
+            {
+                var pic = new Picture(1, "Camel", "Egypt");
+                Picture pic_out;
+                CopyPicture(pic.id, pic.name, pic.location, out pic_out);
+            }
+
 
             // Multithreading
             ThreadGenerateUsers tgu = new();
@@ -188,15 +205,20 @@ namespace csharp_practice
         public static string RandStr(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            Random random = new Random();
             string result = "";
 
             for (int i = 0; i < length; i++)
             {
-                result += chars[random.Next(0, chars.Length)];
+                result += chars[rand.Next(0, chars.Length)];
             }
 
             return result;
+        }
+
+        static void CopyPicture(in int pic_id, in string name, in string location, out Picture pic_out)
+        {
+            //pic_id = 55;      Not allowed because of in
+            pic_out = new Picture(rand.Next(55555), name, location);
         }
     }
 }
