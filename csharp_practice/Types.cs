@@ -4,17 +4,16 @@ namespace csharp_practice
 {
     struct User
     {
-        public static event Action<int>? update_event;
+        public static event Action<int>? UpdateEvent;
 
         public int id = 0;
-        private string email;
+        private string email = "";
         public string Email
         {
             get { return email; }
             set
             {
-                email = value;
-                User.update_event?.Invoke(id);
+                email = value.Substring(0, 255);
             }
         }
 
@@ -25,7 +24,13 @@ namespace csharp_practice
         public User(int id, string email)
         {
             this.id = id;
-            this.email = email;
+            Email = email;
+        }
+
+        public void SetEmail(string email)
+        {
+            Email = email;
+            UpdateEvent?.Invoke(id);
         }
     }
 

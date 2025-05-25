@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#pragma warning disable CS0219
+
+using System.Collections;
 
 namespace csharp_practice
 {
@@ -8,11 +10,17 @@ namespace csharp_practice
 
         static async Task Main(string[] args)
         {
+            Practice.Run();
+
             Task async = AsyncStuff();
             NonAsyncStuff();
             await async;
             Console.WriteLine("End of main");
         }
+
+
+
+
 
         static void NonAsyncStuff()
         {
@@ -27,6 +35,7 @@ namespace csharp_practice
                 decimal v_decimal = 5.0505m; // 28-29 digits; 16 bytes
                 char v_char = 'a';
                 string v_str = "Milos"; // 2 bytes per char
+                v_str = "Paunovic";
                 string? v_nullable_str = null;
                 v_nullable_str = "Milos";
             }
@@ -50,6 +59,10 @@ namespace csharp_practice
                 pic2.location = "Edinburgh";
                 SetPictureLocation(pic, "Paris"); // Will be Paris because you're passing a pointer
                 Picture? pic_nullable = null;
+
+                // Properties
+                Bird bird = new Bird("Mockingbird");
+                //bird.legs = 200; // Not allowed because setter is protected, even though the property is public
             }
 
 
@@ -90,13 +103,11 @@ namespace csharp_practice
                 // Dictionary
                 Dictionary<int, Picture> map_pictures = new Dictionary<int, Picture>();
                 var pic = new Picture(1, "Cat", "Hometown");
-
                 map_pictures.Add(pic.id, pic); // Can throw
                 //map_pictures[temp.id].location;
                 map_pictures.ContainsKey(1);
-
-                Picture pic_out;
-                map_pictures.TryGetValue(1, out pic_out);
+                Picture? pic_out;
+                var success = map_pictures.TryGetValue(1, out pic_out);
 
                 // Hashtable
                 Hashtable foods = new Hashtable();
@@ -117,13 +128,6 @@ namespace csharp_practice
                 //pics_keyed[3];
             }
 
-
-            // Properties
-            {
-                Bird bird = new Bird("Mockingbird");
-                //bird.legs = 200; Not allowed because setter is protected, even though the property is public
-            }
-
             // Reflection
             {
                 string v_str = "Milos";
@@ -134,7 +138,7 @@ namespace csharp_practice
                 Animal animal = new Bird("Mockingbird");
                 var animal_type = animal.GetType();
                 System.Reflection.MethodInfo? method = animal_type.GetMethod("GetSound");
-                var sound = method.Invoke(animal, []);
+                var sound = method?.Invoke(animal, []);
             }
 
 
@@ -144,10 +148,10 @@ namespace csharp_practice
                 User user = new User(1, "milos@example.test");
                 UserUI ui1 = new UserUI("First UI");
                 UserUI ui2 = new UserUI("Second UI");
-                User.update_event += ui1.RefreshUI;
-                User.update_event += ui2.RefreshUI;
+                User.UpdateEvent += ui1.RefreshUI;
+                User.UpdateEvent += ui2.RefreshUI;
                 user.Email = "milooos@example.test";
-                //User.updated_event = null;        Cannot be done from outside the class
+                //User.updated_event = null;        // Cannot be done from outside the class
             }
 
 
@@ -159,39 +163,8 @@ namespace csharp_practice
             }
 
 
-            // Multithreading
-            {
-                ThreadGenerateUsers tgu = new();
-                Thread? t = new Thread(new ThreadStart(tgu.GenerateManyManyUsers));
-                t.Start();
-                Console.WriteLine("Thread started");
 
-                bool app_running = true;
-                int frames = 0;
-                // Main loop
-                while (app_running)
-                {
-                    if (t != null && t.IsAlive == false)
-                    {
-                        Console.WriteLine("Thread dead");
-                        t = null;
-                        var first_user = tgu.users[0];
-                        /* Tried to clear memory here but to no avail
-                         * 
-                        tgu.users.Clear();
-                        tgu.users.Capacity = 0;
-                        tgu = null;
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers(); */
-                    }
-                    Thread.Sleep(8);
-                    frames++;
-                    if (frames == 1000)
-                    {
-                        app_running = false;
-                    }
-                }
-            }
+            //Multithreading();
 
 
             // Lambdas
@@ -204,6 +177,18 @@ namespace csharp_practice
             {
                 string v_str = "Milos";
                 v_str = v_str.AddMonkeys(10);
+            }
+
+            // Datetime
+            {
+                DateTime time = DateTime.UtcNow;
+                DateTime time2 = new DateTime(2025, 5, 1, 21, 30, 15);
+                TimeSpan diff = time - time2;
+
+                DateTime time3 = DateTime.UtcNow.AddSeconds(-1.0);
+                bool result = time > time3;
+                time3 = new DateTime(time.Ticks);
+                result = time == time3;
             }
         }
 
@@ -241,8 +226,42 @@ namespace csharp_practice
 
         static void CopyPicture(in int pic_id, in string name, in string location, out Picture pic_out)
         {
-            //pic_id = 55;      Not allowed because of in
+            //pic_id = 55;      // Not allowed because of in
             pic_out = new Picture(rand.Next(55555), name, location);
+        }
+
+        static void Multithreading()
+        {
+            ThreadGenerateUsers tgu = new();
+            Thread? t = new Thread(new ThreadStart(tgu.GenerateManyManyUsers));
+            t.Start();
+            Console.WriteLine("Thread started");
+
+            bool app_running = true;
+            int frames = 0;
+            // Main loop
+            while (app_running)
+            {
+                if (t != null && t.IsAlive == false)
+                {
+                    Console.WriteLine("Thread dead");
+                    t = null;
+                    var first_user = tgu.users[0];
+                    /* Tried to clear memory here but to no avail
+                     * 
+                    tgu.users.Clear();
+                    tgu.users.Capacity = 0;
+                    tgu = null;
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers(); */
+                }
+                Thread.Sleep(8);
+                frames++;
+                if (frames == 1000)
+                {
+                    app_running = false;
+                }
+            }
         }
     }
 
