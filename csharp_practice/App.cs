@@ -158,8 +158,7 @@ namespace csharp_practice
             // in and out keywords
             {
                 var pic = new Picture(1, "Camel", "Egypt");
-                Picture pic_out;
-                CopyPicture(pic.id, pic.name, pic.location, out pic_out);
+                CopyPicture(pic.id, pic.name, pic.location, out Picture pic_out);
             }
 
 

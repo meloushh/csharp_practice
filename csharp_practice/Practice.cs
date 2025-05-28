@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace csharp_practice
+﻿namespace csharp_practice
 {
     class Practice
     {
@@ -8,23 +6,7 @@ namespace csharp_practice
 
         public static void Run()
         {
-            var func1 = (int a) =>
-            {
-                Console.WriteLine("Func 1");
-            };
-
-            var func2 = (int a) =>
-            {
-                Console.WriteLine("Func 2");
-            };
-
-            UserUpdated += func1;
-            UserUpdated += func2;
-
-            UserUpdated?.Invoke(5);
-            int a = 6;
-            CopyInt(a, out int b); // b declared here
-            //Console.WriteLine(b);
+            //
         }
 
         static void CopyInt(in int a, out int b)
