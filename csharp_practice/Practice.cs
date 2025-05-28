@@ -23,8 +23,8 @@ namespace csharp_practice
 
             UserUpdated?.Invoke(5);
             int a = 6;
-            int b;
-            CopyInt(a, out b);
+            CopyInt(a, out int b); // b declared here
+            //Console.WriteLine(b);
         }
 
         static void CopyInt(in int a, out int b)
