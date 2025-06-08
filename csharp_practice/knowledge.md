@@ -1,0 +1,5 @@
+- Libraries
+    - Microsoft.Data.SqlClient
+    - ASP
+    - MonoGame
+    - Unity
